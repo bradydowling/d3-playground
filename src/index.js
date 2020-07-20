@@ -30,24 +30,26 @@ const svg = d3.create('svg')
 
 const bar = svg.selectAll('g')
     .data(data)
-    .join('g')
-        .attr('transform', (d, i) => `translate(${x(i)},${height - y(d)})`);
+    .join('g');
 
 bar.append('rect')
     .attr('fill', 'steelblue')
+    .attr('x', (d, i) => x(i))
+    .attr('y', d => y(d))
     .attr('width', x.bandwidth() - barSpacing)
-    .attr('height', y);
+    .attr('height', d => y(0) - y(d));
 
 bar.append('text')
     .attr('fill', 'white')
-    .attr('x', x.bandwidth() / 2)
-    .attr('y', d => y(d) - labelPadding)
-    .attr('dx', '0.35em')
+    .attr('x', (d, i) => x(i) + x.bandwidth() / 2)
+    .attr('y', d => y(0) - labelPadding)
+    .attr('dx', d => `0.${d.toString().length * 30}em`)
     .text(d => d);
 
 svg.append("g")
-    .attr('transform', `translate(0,${height})`)
+    .attr('transform', `translate(0,${height - margin.bottom})`)
     .call(x_axis);
+
 svg.append("g")
     .attr('transform', `translate(${margin.left},0)`)
     .call(y_axis);
