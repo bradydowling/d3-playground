@@ -13,14 +13,13 @@ const x = d3.scaleBand()
     .range([margin.left, width - margin.right]);
 
 const y = d3.scaleLinear()
-    .domain([0, d3.max(data)])
-    .range([0, height]);
+    .domain([0, d3.max(data)]).nice()
+    .range([height - margin.bottom, margin.top]);
 
 const x_axis = d3.axisBottom()
     .scale(x);
 
-const y_axis = d3.axisLeft()
-    .scale(y);
+const y_axis = d3.axisLeft(y);
 
 const svg = d3.create('svg')
     .attr('width', x.range()[1])
