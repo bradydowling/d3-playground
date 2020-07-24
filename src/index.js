@@ -18,13 +18,22 @@ const formatDate = d3.timeFormat('%m/%d');
 
 const margin = { top: 30, right: 30, bottom: 30, left: 30 };
 const height = 420;
-const width = 2220;
-const barSpacing = 4;
+const width = 1220;
+const barSpacing = 1;
 const labelPadding = 3;
 
 const getBandwidth = (data) => {
     return width / data.length - barSpacing
 };
+
+const addBarText = (bar) => {
+    bar.append('text')
+        .attr('fill', 'white')
+        .attr('x', (d, i) => x(d.date) + getBandwidth(parsedData) / 2)
+        .attr('y', d => y(0) - labelPadding)
+        .attr('dx', d => `0.${d.minutes.toString().length * 30}em`)
+        .text(d => d.minutes);
+}
 
 const x = d3.scaleTime()
     .domain([parsedData[0].date, parsedData[parsedData.length - 1].date]).nice()
@@ -56,13 +65,6 @@ bar.append('rect')
     .attr('y', d => y(d.minutes))
     .attr('width', getBandwidth(parsedData))
     .attr('height', d => y(0) - y(d.minutes));
-
-bar.append('text')
-    .attr('fill', 'white')
-    .attr('x', (d, i) => x(d.date) + getBandwidth(parsedData) / 2)
-    .attr('y', d => y(0) - labelPadding)
-    .attr('dx', d => `0.${d.minutes.toString().length * 30}em`)
-    .text(d => d.minutes);
 
 svg.append("g")
     .attr('transform', `translate(0,${height - margin.bottom})`)
