@@ -1,19 +1,32 @@
 import * as d3 from 'd3';
+import usageData from './data/usage.json';
 
-const data = [4, 8, 15, 16, 23, 36];
+const hoursToMinutes = (timeString) => {
+    const [ hours, minutes ] = timeString.split(":");
+    const totalMinutes = parseInt(hours, 10) * 60 + parseInt(minutes, 10);
+    return totalMinutes;
+}
+
+const parsedData = usageData.reverse().map((item) => {
+    return {
+        date: new Date(item.Date),
+        minutes: hoursToMinutes(item["Usage time"])
+    }
+});
+console.log(parsedData[0])
 
 const margin = { top: 30, right: 30, bottom: 30, left: 30 };
 const height = 420;
-const width = 420;
+const width = 2220;
 const barSpacing = 1;
 const labelPadding = 3;
 
 const x = d3.scaleBand()
-    .domain(d3.range(data.length))
+    .domain(d3.range(parsedData.length))
     .range([margin.left, width - margin.right]);
 
 const y = d3.scaleLinear()
-    .domain([0, d3.max(data)]).nice()
+    .domain([0, d3.max(parsedData.map(item => item.minutes))]).nice()
     .range([height - margin.bottom, margin.top]);
 
 const x_axis = d3.axisBottom()
@@ -29,22 +42,22 @@ const svg = d3.create('svg')
     .attr('text-anchor', 'end');
 
 const bar = svg.selectAll('g')
-    .data(data)
+    .data(parsedData)
     .join('g');
 
 bar.append('rect')
     .attr('fill', 'steelblue')
     .attr('x', (d, i) => x(i))
-    .attr('y', d => y(d))
+    .attr('y', d => y(d.minutes))
     .attr('width', x.bandwidth() - barSpacing)
-    .attr('height', d => y(0) - y(d));
+    .attr('height', d => y(0) - y(d.minutes));
 
 bar.append('text')
     .attr('fill', 'white')
     .attr('x', (d, i) => x(i) + x.bandwidth() / 2)
     .attr('y', d => y(0) - labelPadding)
-    .attr('dx', d => `0.${d.toString().length * 30}em`)
-    .text(d => d);
+    .attr('dx', d => `0.${d.minutes.toString().length * 30}em`)
+    .text(d => d.minutes);
 
 svg.append("g")
     .attr('transform', `translate(0,${height - margin.bottom})`)
