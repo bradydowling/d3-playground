@@ -9,7 +9,7 @@ const hoursToMinutes = (timeString) => {
 
 const parsedData = usageData.reverse().map((item) => {
     return {
-        date: new Date(item.Date),
+        date: d3.timeFormat('%m/%d')(new Date(item.Date)),
         minutes: hoursToMinutes(item["Usage time"])
     }
 });
@@ -17,12 +17,12 @@ console.log(parsedData[0])
 
 const margin = { top: 30, right: 30, bottom: 30, left: 30 };
 const height = 420;
-const width = 2220;
+const width = 5220;
 const barSpacing = 1;
 const labelPadding = 3;
 
 const x = d3.scaleBand()
-    .domain(d3.range(parsedData.length))
+    .domain(parsedData.map(d => d.date))
     .range([margin.left, width - margin.right]);
 
 const y = d3.scaleLinear()
@@ -47,14 +47,14 @@ const bar = svg.selectAll('g')
 
 bar.append('rect')
     .attr('fill', 'steelblue')
-    .attr('x', (d, i) => x(i))
+    .attr('x', (d, i) => x(d.date))
     .attr('y', d => y(d.minutes))
     .attr('width', x.bandwidth() - barSpacing)
     .attr('height', d => y(0) - y(d.minutes));
 
 bar.append('text')
     .attr('fill', 'white')
-    .attr('x', (d, i) => x(i) + x.bandwidth() / 2)
+    .attr('x', (d, i) => x(d.date) + x.bandwidth() / 2)
     .attr('y', d => y(0) - labelPadding)
     .attr('dx', d => `0.${d.minutes.toString().length * 30}em`)
     .text(d => d.minutes);
