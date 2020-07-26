@@ -7,10 +7,10 @@ const hoursToMinutes = (timeString) => {
     return totalMinutes;
 }
 
-const parsedData = usageData.reverse().map((item) => {
+const data = usageData.reverse().map((item) => {
     return {
         date: new Date(item.Date),
-        minutes: hoursToMinutes(item["Usage time"])
+        value: hoursToMinutes(item["Usage time"])
     }
 });
 
@@ -29,18 +29,18 @@ const getBandwidth = (data) => {
 const addBarText = (bar) => {
     bar.append('text')
         .attr('fill', 'white')
-        .attr('x', (d, i) => x(d.date) + getBandwidth(parsedData) / 2)
-        .attr('y', d => y(0) - labelPadding)
-        .attr('dx', d => `0.${d.minutes.toString().length * 30}em`)
-        .text(d => d.minutes);
+        .attr('x', (d, i) => x(d.date) + getBandwidth(data) / 2)
+        .attr('y', d => y(0) - labelPadding) // Change this to y(d) + 20 (for padding from the top)
+        .attr('dx', d => `0.${d.value.toString().length * 30}em`)
+        .text(d => d.value);
 }
 
 const x = d3.scaleTime()
-    .domain([parsedData[0].date, parsedData[parsedData.length - 1].date]).nice()
+    .domain([data[0].date, data[data.length - 1].date]).nice()
     .range([margin.left, width - margin.right]);
 
 const y = d3.scaleLinear()
-    .domain([0, d3.max(parsedData.map(item => item.minutes))]).nice()
+    .domain([0, d3.max(data.map(item => item.value))]).nice()
     .range([height - margin.bottom, margin.top]);
 
 const x_axis = d3.axisBottom()
@@ -56,15 +56,15 @@ const svg = d3.create('svg')
     .attr('text-anchor', 'end');
 
 const bar = svg.selectAll('g')
-    .data(parsedData)
+    .data(data)
     .join('g');
 
 bar.append('rect')
     .attr('fill', 'steelblue')
     .attr('x', (d, i) => x(d.date))
-    .attr('y', d => y(d.minutes))
-    .attr('width', getBandwidth(parsedData))
-    .attr('height', d => y(0) - y(d.minutes));
+    .attr('y', d => y(d.value))
+    .attr('width', getBandwidth(data))
+    .attr('height', d => y(0) - y(d.value));
 
 svg.append("g")
     .attr('transform', `translate(0,${height - margin.bottom})`)
@@ -73,5 +73,20 @@ svg.append("g")
 svg.append("g")
     .attr('transform', `translate(${margin.left},0)`)
     .call(y_axis);
+
+const line = d3.line()
+    .curve(d3.curveMonotoneX)
+    .defined(d => !isNaN(d.value))
+    .x(d => x(d.date) + + getBandwidth(data) / 2)
+    .y(d => y(d.value))
+
+svg.append("path")
+    .datum(data)
+    .attr("fill", "none")
+    .attr("stroke", "#777")
+    .attr("stroke-width", 1)
+    .attr("stroke-linejoin", "round")
+    .attr("stroke-linecap", "round")
+    .attr("d", line);
 
 document.querySelector('body').appendChild(svg.node());
