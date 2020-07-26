@@ -7,10 +7,18 @@ const hoursToMinutes = (timeString) => {
     return totalMinutes;
 }
 
-const data = usageData.reverse().map((item) => {
+const getPastDaysAvg = (pastDaysNum, currentDayIndex, daysData) => {
+    const pastDays = daysData.filter((innerItem, innerIndex) => innerIndex > (currentDayIndex - pastDaysNum) && innerIndex < currentDayIndex).concat(daysData[currentDayIndex]);
+    const pastDaysValues = pastDays.map(item => hoursToMinutes(item["Usage time"]));
+    const pastDaysTotal = pastDaysValues.reduce((total, dayValue) => total + dayValue);
+    return pastDaysTotal / pastDays.length;
+};
+
+const data = usageData.reverse().map((item, i, partData) => {
     return {
         date: new Date(item.Date),
-        value: hoursToMinutes(item["Usage time"])
+        value: hoursToMinutes(item["Usage time"]),
+        fiveDayAvg: getPastDaysAvg(5, i, partData)
     }
 });
 
@@ -76,9 +84,9 @@ svg.append("g")
 
 const line = d3.line()
     .curve(d3.curveMonotoneX)
-    .defined(d => !isNaN(d.value))
+    .defined(d => !isNaN(d.fiveDayAvg))
     .x(d => x(d.date) + + getBandwidth(data) / 2)
-    .y(d => y(d.value))
+    .y(d => y(d.fiveDayAvg))
 
 svg.append("path")
     .datum(data)
