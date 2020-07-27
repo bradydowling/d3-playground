@@ -47,7 +47,7 @@ const bar = svg.selectAll('g')
 
 bar.append('rect')
     .attr('fill', 'steelblue')
-    .attr('x', (d, i) => x(d.date))
+    .attr('x', d => x(d.date))
     .attr('y', d => y(d.value))
     .attr('width', getBandwidth(width, data, barSpacing))
     .attr('height', d => y(0) - y(d.value));
