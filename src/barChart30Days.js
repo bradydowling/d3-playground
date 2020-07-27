@@ -7,8 +7,16 @@ import {
     hoursToMinutes,
     margin,
     width,
-    getBandwidth
+    getBandwidth,
 } from './helpers';
+
+const barStyle = {
+    color: 'steelblue',
+    opacity: {
+        default: .7,
+        hover: 1
+    }
+};
 
 const data = usageData.map((item, i, partData) => {
     return {
@@ -44,11 +52,29 @@ const bar = svg.selectAll('g')
     .join('g');
 
 bar.append('rect')
-    .attr('fill', 'steelblue')
+    .attr('fill', barStyle.color)
+    .attr('opacity', barStyle.opacity.default)
     .attr('x', d => x(d.date))
     .attr('y', d => y(d.value))
     .attr('width', getBandwidth(width, thirtyDayData, barSpacing))
-    .attr('height', d => y(0) - y(d.value));
+    .attr('height', d => y(0) - y(d.value))
+    .on('mouseover', function() {
+        d3.select(this)
+            .transition(30)
+            .attr('opacity', barStyle.opacity.hover);
+        })
+        .on('mouseout', function() {
+            d3.select(this)
+            .transition()
+            .attr('opacity', barStyle.opacity.default);
+    });
+
+// bar.append('text')
+//     .attr('fill', 'black')
+//     .attr('x', (d, i) => x(d.date))
+//     .attr('y', d => y(0))
+//     .attr('dx', d => `0.${d.value.toString().length * 30}em`)
+//     .text(d => d.value);
 
 svg.append('g')
     .attr('transform', `translate(0,${height - margin.bottom})`)

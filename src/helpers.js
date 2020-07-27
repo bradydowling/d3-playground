@@ -12,16 +12,6 @@ export const hoursToMinutes = (timeString) => {
     return totalMinutes;
 }
 
-export const addBarText = (bar) => {
-    const labelPadding = 3;
-    bar.append('text')
-        .attr('fill', 'white')
-        .attr('x', (d, i) => x(d.date) + getBandwidth(data, width) / 2)
-        .attr('y', d => y(0) - labelPadding) // Change this to y(d) + 20 (for padding from the top)
-        .attr('dx', d => `0.${d.value.toString().length * 30}em`)
-        .text(d => d.value);
-}
-
 export const getPastDays = (pastDaysNum, currentDayIndex, daysData) => {
     const pastDays = daysData.sort((a, b) => a.date > b.date).filter((innerItem, innerIndex) => innerIndex > (currentDayIndex - pastDaysNum) && innerIndex < currentDayIndex).concat(daysData[currentDayIndex]);
     const pastDaysValues = pastDays.map(item => hoursToMinutes(item["Usage time"]));
