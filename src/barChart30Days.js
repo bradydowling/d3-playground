@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import usageData from './data/usage.json';
+import rawData from './data/usage.json';
 import {
     barSpacing,
     getPastDays,
@@ -10,6 +10,8 @@ import {
     getBandwidth,
 } from './helpers';
 
+const animationDurationRatio = 5;
+
 const barStyle = {
     color: 'steelblue',
     opacity: {
@@ -18,7 +20,17 @@ const barStyle = {
     }
 };
 
-const data = usageData.map((item, i, partData) => {
+const getStepData = (data, stepNum) => {
+    return data.map((item, i) => {
+        const value = i < stepNum ? item.value : 0
+        return {
+            ...item,
+            value
+        };
+    });
+};
+
+const data = rawData.map((item, i, partData) => {
     return {
         date: new Date(item.Date),
         value: hoursToMinutes(item["Usage time"])
@@ -48,7 +60,7 @@ const svg = d3.create('svg')
     .attr('height', height);
 
 const bar = svg.selectAll('g')
-    .data(thirtyDayData)
+    .data(getStepData(thirtyDayData, 0))
     .join('g');
 
 bar.append('rect')
@@ -85,3 +97,22 @@ svg.append('g')
     .call(y_axis);
 
 document.querySelector('body').appendChild(svg.node());
+
+async function animateBars (data) {
+  for (let i = 1; i <= data.length; i++) {
+    const newData = getStepData(thirtyDayData, i)
+    const bars = svg.selectAll('rect')
+      .data(newData);
+    const transition = bars
+      .transition()
+      .ease(d3.easeLinear)
+      .duration(d => animationDurationRatio * d.value)
+        .attr('y', d => y(d.value))
+        .attr('height', d => y(0) - y(d.value));
+
+    await transition.end();
+  }
+}
+
+animateBars(thirtyDayData)
+
