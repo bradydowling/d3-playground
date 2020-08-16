@@ -1,0 +1,177 @@
+[
+  {
+    "date": "7/21/2020",
+    "fasting": 0,
+    "breakfast": 0,
+    "lunch": 130,
+    "dinner": 130
+  },
+  {
+    "date": "7/22/2020",
+    "fasting": 84,
+    "breakfast": 116,
+    "lunch": 97,
+    "dinner": 97
+  },
+  {
+    "date": "7/23/2020",
+    "fasting": 74,
+    "breakfast": 137,
+    "lunch": 107,
+    "dinner": 121
+  },
+  {
+    "date": "7/24/2020",
+    "fasting": 74,
+    "breakfast": 133,
+    "lunch": 107,
+    "dinner": 111
+  },
+  {
+    "date": "7/25/2020",
+    "fasting": 101,
+    "breakfast": 109,
+    "lunch": 94,
+    "dinner": 106
+  },
+  {
+    "date": "7/26/2020",
+    "fasting": 78,
+    "breakfast": 94,
+    "lunch": 130,
+    "dinner": 149
+  },
+  {
+    "date": "7/27/2020",
+    "fasting": 84,
+    "breakfast": 120,
+    "lunch": 101,
+    "dinner": 159
+  },
+  {
+    "date": "7/28/2020",
+    "fasting": 84,
+    "breakfast": 133,
+    "lunch": 132,
+    "dinner": 133
+  },
+  {
+    "date": "7/29/2020",
+    "fasting": 86,
+    "breakfast": 130,
+    "lunch": 90,
+    "dinner": 77
+  },
+  {
+    "date": "7/30/2020",
+    "fasting": 80,
+    "breakfast": 143,
+    "lunch": 148,
+    "dinner": 137
+  },
+  {
+    "date": "7/31/2020",
+    "fasting": 80,
+    "breakfast": 116,
+    "lunch": 0,
+    "dinner": 116
+  },
+  {
+    "date": "8/1/2020",
+    "fasting": 81,
+    "breakfast": 112,
+    "lunch": 154,
+    "dinner": 165
+  },
+  {
+    "date": "8/2/2020",
+    "fasting": 81,
+    "breakfast": 162,
+    "lunch": 0,
+    "dinner": 101
+  },
+  {
+    "date": "8/3/2020",
+    "fasting": 93,
+    "breakfast": 138,
+    "lunch": 125,
+    "dinner": 124
+  },
+  {
+    "date": "8/4/2020",
+    "fasting": 112,
+    "breakfast": 103,
+    "lunch": 120,
+    "dinner": 116
+  },
+  {
+    "date": "8/5/2020",
+    "fasting": 82,
+    "breakfast": 111,
+    "lunch": 125,
+    "dinner": 145
+  },
+  {
+    "date": "8/6/2020",
+    "fasting": 90,
+    "breakfast": 105,
+    "lunch": 135,
+    "dinner": 121
+  },
+  {
+    "date": "8/7/2020",
+    "fasting": 79,
+    "breakfast": 97,
+    "lunch": 123,
+    "dinner": 153
+  },
+  {
+    "date": "8/8/2020",
+    "fasting": 79,
+    "breakfast": 113,
+    "lunch": 135,
+    "dinner": 112
+  },
+  {
+    "date": "8/9/2020",
+    "fasting": 83,
+    "breakfast": 112,
+    "lunch": 0,
+    "dinner": 93
+  },
+  {
+    "date": "8/10/2020",
+    "fasting": 91,
+    "breakfast": 119,
+    "lunch": 140,
+    "dinner": 153
+  },
+  {
+    "date": "8/11/2020",
+    "fasting": 94,
+    "breakfast": 96,
+    "lunch": 137,
+    "dinner": 154
+  },
+  {
+    "date": "8/12/2020",
+    "fasting": 80,
+    "breakfast": 100,
+    "lunch": 130,
+    "dinner": 99
+  },
+  {
+    "date": "8/13/2020",
+    "fasting": 72,
+    "breakfast": 129,
+    "lunch": 134,
+    "dinner": 123
+  },
+  {
+    "date": "8/14/2020",
+    "fasting": 83,
+    "breakfast": 96,
+    "lunch": 107,
+    "dinner": 0
+  }
+]
