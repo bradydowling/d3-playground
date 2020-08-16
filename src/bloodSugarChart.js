@@ -13,7 +13,7 @@ const animationDurationRatio = 5;
 const barStyle = {
     color: 'steelblue',
     opacity: {
-        default: .8,
+        default: .9,
         hover: 1
     }
 };
@@ -36,15 +36,13 @@ const data = rawData.map(item => {
 });
 
 const dates = data.map(d => d.date);
-const values = data.map(d => d.value);
-const nonZeroValues = values.filter(value => value !== 0);
 
 const x = d3.scaleTime()
     .domain([d3.min(dates), d3.max(dates)])
     .range([margin.left, width - margin.right]);
 
 const y = d3.scaleLinear()
-    .domain([0, d3.max(data.map(d => d.value))])
+    .domain([0, d3.max(data.map(d => d.value))]).nice()
     .range([height - margin.bottom, margin.top]);
 
 const color = d3.scaleSequential(d3.interpolateRdYlGn)
@@ -58,9 +56,14 @@ const x_axis = d3.axisBottom()
 const y_axis = d3.axisLeft()
     .scale(y);
 
+const chartWidth = x.range()[1];
+
 const svg = d3.create('svg')
-    .attr('width', x.range()[1])
-    .attr('height', height);
+    .attr('width', chartWidth)
+    .attr('height', height)
+    .attr('font-family', 'sans-serif')
+    .attr('font-size', 10)
+    .attr('text-anchor', 'end');
 
 const bar = svg.selectAll('g')
     .data(getStepData(data, 0))
@@ -75,7 +78,7 @@ bar.append('rect')
       return x(d.date)
     })
     .attr('y', d => y(d.value))
-    .attr('width', getBandwidth(width, data, barSpacing))
+    .attr('width', getBandwidth(chartWidth, data, barSpacing))
     .attr('height', d => y(0) - y(d.value))
     .on('mouseover', function() {
         d3.select(this)
@@ -90,8 +93,7 @@ bar.append('rect')
 
 bar.append('text')
     .attr('fill', 'white')
-    .attr('font-family', 'sans-serif')
-    .attr('x', (d, i) => x(d.date))
+    .attr('x', (d, i) => x(d.date) + getBandwidth(chartWidth, data, barSpacing) / 2)
     .attr('y', d => y(0) - 10)
     .attr('dx', d => `0.${d.value.toString().length * 50}em`)
     .text((d, i) => data[i].value);
