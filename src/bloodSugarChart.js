@@ -36,6 +36,8 @@ const data = rawData.map(item => {
 });
 
 const dates = data.map(d => d.date);
+const values = data.map(d => d.value);
+const nonZeroValues = values.filter(value => value !== 0);
 
 const x = d3.scaleTime()
     .domain([d3.min(dates), d3.max(dates)])
@@ -45,8 +47,10 @@ const y = d3.scaleLinear()
     .domain([0, d3.max(data.map(d => d.value))])
     .range([height - margin.bottom, margin.top]);
 
-const color = d3.scaleSequentialQuantile(d3.interpolateRgb('green', 'red'))
-  .domain([0, 129, 139])
+const color = d3.scaleSequential(d3.interpolateRdYlGn)
+  .domain([140, 120])
+  // Got these values using trial and error
+  // Still not 100% sure how this domain works
 
 const x_axis = d3.axisBottom()
     .scale(x);
@@ -86,11 +90,10 @@ bar.append('rect')
 
 bar.append('text')
     .attr('fill', 'white')
-    .attr('stroke', 'black')
-    .attr('stroke-width', '1px')
+    .attr('font-family', 'sans-serif')
     .attr('x', (d, i) => x(d.date))
     .attr('y', d => y(0) - 10)
-    .attr('dx', d => `0.${d.value.toString().length * 30}em`)
+    .attr('dx', d => `0.${d.value.toString().length * 50}em`)
     .text((d, i) => data[i].value);
 
 svg.append('g')
