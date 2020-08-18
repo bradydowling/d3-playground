@@ -2,12 +2,12 @@ import * as d3 from 'd3';
 import rawData from './data/readings.json';
 import {
     barSpacing,
-    height,
     margin,
     getBandwidth,
 } from './helpers';
 
-const width = 800;
+const width = 1000;
+const height = 500;
 const animationDurationRatio = 5;
 
 const barStyle = {
@@ -31,7 +31,7 @@ const getStepData = (data, stepNum) => {
 const data = rawData.map(item => {
     return {
         date: new Date(item.date),
-        value: item.dinner
+        value: item.breakfast
     }
 });
 
@@ -57,6 +57,7 @@ const y_axis = d3.axisLeft()
     .scale(y);
 
 const chartWidth = x.range()[1];
+const bandwidth = getBandwidth(chartWidth, data, barSpacing);
 
 const svg = d3.create('svg')
     .attr('width', chartWidth)
@@ -78,7 +79,7 @@ bar.append('rect')
       return x(d.date)
     })
     .attr('y', d => y(d.value))
-    .attr('width', getBandwidth(chartWidth, data, barSpacing))
+    .attr('width', bandwidth)
     .attr('height', d => y(0) - y(d.value))
     .on('mouseover', function() {
         d3.select(this)
@@ -93,13 +94,13 @@ bar.append('rect')
 
 bar.append('text')
     .attr('fill', 'white')
-    .attr('x', (d, i) => x(d.date) + getBandwidth(chartWidth, data, barSpacing) / 2)
+    .attr('x', (d, i) => x(d.date) + bandwidth / 2)
     .attr('y', d => y(0) - 10)
     .attr('dx', d => `0.${d.value.toString().length * 50}em`)
     .text((d, i) => data[i].value);
 
 svg.append('g')
-    .attr('transform', `translate(0,${height - margin.bottom})`)
+    .attr('transform', `translate(${bandwidth / 2},${height - margin.bottom})`)
     .call(x_axis);
 
 svg.append('g')
