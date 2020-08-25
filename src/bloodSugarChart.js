@@ -75,11 +75,9 @@ bar.append('rect')
       return color(d.value);
     })
     .attr('opacity', barStyle.opacity.default)
-    .attr('x', d => {
-      return x(d.date)
-    })
+    .attr('x', (d, i) => i === 0 ? x(d.date) : x(d.date) - bandwidth / 2)
     .attr('y', d => y(d.value))
-    .attr('width', bandwidth)
+    .attr('width', (d, i) => i === 0 ? bandwidth / 2 : bandwidth)
     .attr('height', d => y(0) - y(d.value))
     .on('mouseover', function() {
         d3.select(this)
@@ -94,13 +92,13 @@ bar.append('rect')
 
 bar.append('text')
     .attr('fill', 'white')
-    .attr('x', (d, i) => x(d.date) + bandwidth / 2)
+    .attr('x', (d, i) => x(d.date))
     .attr('y', d => y(0) - 10)
     .attr('dx', d => `0.${d.value.toString().length * 50}em`)
     .text((d, i) => data[i].value);
 
 svg.append('g')
-    .attr('transform', `translate(${bandwidth / 2},${height - margin.bottom})`)
+    .attr('transform', `translate(0,${height - margin.bottom})`)
     .call(x_axis);
 
 svg.append('g')
