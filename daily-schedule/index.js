@@ -53,9 +53,9 @@ const data = [
   },
 ];
 
-const width = 1000;
-const height = 200;
-const margin = { top: 30, right: 30, bottom: 30, left: 30 };
+const height = 1000;
+const width = 200;
+const margin = { top: 30, right: 30, bottom: 30, left: 50 };
 
 const barStyle = {
     color: 'purple',
@@ -63,30 +63,22 @@ const barStyle = {
         default: .9,
         hover: 1
     },
-    height: height - margin.bottom,
+    width: width - margin.left - margin.right,
     padding: 10
 };
 
 const dates = data.map(d => new Date(d.timeFrom));
 
-const x = d3.scaleTime()
+const y = d3.scaleTime()
     .domain([d3.min(dates), d3.max(dates)])
-    .range([margin.left, width - margin.right]);
-
-const y = d3.scaleLinear()
-    .domain([0, 10]) // TODO: How do I hide all ticks?
-    .range([height - margin.bottom, margin.top]);
-
-const x_axis = d3.axisBottom()
-    .scale(x);
+    .range([margin.top, height - margin.bottom]);
 
 const y_axis = d3.axisLeft()
+    .ticks(24)
     .scale(y);
 
-const chartWidth = x.range()[1];
-
 const svg = d3.create('svg')
-    .attr('width', chartWidth)
+    .attr('width', width)
     .attr('height', height)
     .attr('font-family', 'sans-serif')
     .attr('font-size', 10)
@@ -99,25 +91,22 @@ const bar = svg.selectAll('g')
 bar.append('rect')
     .attr('fill', barStyle.color)
     .attr('opacity', barStyle.opacity.default)
-    .attr('x', d => x(new Date(d.timeFrom)))
-    .attr('y', 0)
-    .attr('width', d => {
-        const startPoint = x(new Date(d.timeFrom));
-        const endPoint = x(new Date(d.timeTo));
+    .attr('x', margin.left)
+    .attr('y', d => y(new Date(d.timeFrom)))
+    .attr('height', d => {
+        const startPoint = y(new Date(d.timeFrom));
+        const endPoint = y(new Date(d.timeTo));
         return endPoint - startPoint - barStyle.padding;
     })
-    .attr('height', barStyle.height);
+    .attr('width', barStyle.width)
+    .attr('rx', 5);
 
 bar.append('text')
     .attr('fill', 'white')
-    .attr('x', (d, i) => x(d.date))
+    .attr('x', d => d.name || 'No text')
     .attr('y', d => y(0) - 10)
     .attr('dx', d => `0.${d.value.toString().length * 50}em`)
     .text((d, i) => data[i].value);
-
-svg.append('g')
-    .attr('transform', `translate(0,${height - margin.bottom})`)
-    .call(x_axis);
 
 svg.append('g')
     .attr('transform', `translate(${margin.left},0)`)
